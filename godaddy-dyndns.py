@@ -1,5 +1,9 @@
 #!/usr/bin/python3
 
+# MIT License
+# 
+# Copyright (c) 2019 Leon Latsch
+
 import os
 import socket
 import requests
