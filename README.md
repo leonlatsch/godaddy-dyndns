@@ -6,7 +6,7 @@ Python based GoDaddy dyndns script using only the GoDaddy api.
 
 - Gets the public ip using [ip.42.pl](http://ip.42.pl/raw). Fallback: [api.ipify.org](https://api.ipify.org/?format=raw)
 - Creates or updates the dns entry with the name of `@` and the type of `A`.
-- **Won't work if there are more than one entries matching this condition!** (very inlikely)
+- **Won't work if there are more than one entries matching this condition!** (very unlikely)
 
 ## Usage
 
