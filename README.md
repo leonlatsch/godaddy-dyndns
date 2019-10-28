@@ -11,7 +11,7 @@ Python based GoDaddy dyndns script using only the GoDaddy api.
 ## Usage
 
 - Clone the repository.
-- Enter your api credentials and domain name at the top of the script.
+- Enter you api credentials and domain name into `godaddy-dyndns.conf`. __You can create api credentials [here](https://developer.godaddy.com)__
 - run the script to test it.
 - I reccomand setting up a cron job to update the dns entry every hour: `0 * * * * /path/to/script.py`
 

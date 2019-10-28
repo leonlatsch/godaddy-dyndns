@@ -4,14 +4,16 @@
 # 
 # Copyright (c) 2019 Leon Latsch
 
-import os
-import socket
+from configparser import ConfigParser
 import requests
 import json
 
-key = "[KEY]"
-secret = "[SECRET]"
-domain = "[DOMAIN]"
+cfg = ConfigParser()
+cfg.read("godaddy-dyndns.conf")
+
+key = cfg.get("godaddy", "key")
+secret = cfg.get("godaddy", "secret")
+domain = cfg.get("godaddy", "domain")
 
 base_url = "https://api.godaddy.com"
 endpoint_update = "/v1/domains/" + domain + "/records"
@@ -43,4 +45,4 @@ r = update_dns(ip)
 if r.status_code == 200:
     print("[*] Updated dns record for " + domain + " to " + ip)
 else:
-    print("[!] Error updating dns record: " + r.status_code)
+    print("[!] Error updating dns record: " + str(r.status_code))
