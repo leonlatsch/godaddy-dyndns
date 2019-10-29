@@ -34,9 +34,9 @@ def update_dns(ip):
 
     if len(records) == 0:
         return requests.patch(base_url + endpoint_update, json=new_records, headers=headers)
-    elif len(records == 1):
+    elif len(records) == 1:
         return  requests.put(base_url + endpoint_records, json=new_records, headers=headers)
-    elif len(records > 1):
+    elif len(records) > 1:
         print("[!] You got " + str(len(records)) + " records of type A with host @. Please delete as least " + str(len(records) - 1)) + "of them"
         
 
