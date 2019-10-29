@@ -7,9 +7,10 @@
 from configparser import ConfigParser
 import requests
 import json
+import os
 
 cfg = ConfigParser()
-cfg.read("godaddy-dyndns.conf")
+cfg.read(os.path.dirname(__file__) + "/godaddy-dyndns.conf")
 
 key = cfg.get("godaddy", "key")
 secret = cfg.get("godaddy", "secret")
