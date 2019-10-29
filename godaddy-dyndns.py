@@ -30,16 +30,15 @@ def update_dns(ip):
     headers = {"Authorization": "sso-key " + key + ":" + secret}
     records = requests.get(base_url + endpoint_records, headers=headers).json()
     record = {"data": ip, "name": "@", "type": "A"}
-    new_records = []
+    new_records = [record]
 
-    for _ in records:
-        new_records.append(record)
-
-    if len(new_records) >= 1:
-        return  requests.put(base_url + endpoint_records, json=new_records, headers=headers)
-    else:
-        new_records.append(record)
+    if len(records) == 0:
         return requests.patch(base_url + endpoint_update, json=new_records, headers=headers)
+    elif len(records) == 1:
+        return  requests.put(base_url + endpoint_records, json=new_records, headers=headers)
+    elif len(records) > 1:
+        print("[!] You got " + str(len(records)) + " records of type A with host @. Please delete as least " + str(len(records) - 1) + " of them")
+        
 
 ip = get_ip()
 r = update_dns(ip)
