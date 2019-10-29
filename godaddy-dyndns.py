@@ -44,5 +44,5 @@ ip = get_ip()
 r = update_dns(ip)
 if r is not None and r.status_code == 200:
     print("[*] Updated dns record for " + domain + " to " + ip)
-else:
-    print("[!] Error updating dns record: " + str(r))
+elif r is not None:
+    print("[!] Error updating dns record: " + str(r.status_code))
