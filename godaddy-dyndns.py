@@ -28,9 +28,13 @@ def get_ip():
 
 def update_dns(ip):
     headers = {"Authorization": "sso-key " + key + ":" + secret}
-    records = requests.get(base_url + endpoint_records, headers=headers).json()
-    record = {"data": ip, "name": "@", "type": "A"}
-    new_records = [record]
+    r = requests.get(base_url + endpoint_records, headers=headers)
+
+    if r.status_code != 200:
+        return r
+    
+    records = r.json()
+    new_records = [{"data": ip, "name": "@", "type": "A"}]
 
     if len(records) == 0:
         return requests.patch(base_url + endpoint_update, json=new_records, headers=headers)
@@ -45,4 +49,4 @@ r = update_dns(ip)
 if r is not None and r.status_code == 200:
     print("[*] Updated dns record for " + domain + " to " + ip)
 elif r is not None:
-    print("[!] Error updating dns record: " + str(r.status_code))
+    print("[!] Error updating dns record: " + str(r.status_code) + " " + str(r.reason))
