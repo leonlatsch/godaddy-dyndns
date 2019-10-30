@@ -21,9 +21,9 @@ endpoint_update = "/v1/domains/" + domain + "/records"
 endpoint_records = "/v1/domains/" + domain + "/records/A/@"
 
 def get_ip():
-    r = requests.get("http://ip.42.pl/raw")
+    r = requests.get("https://api.ipify.org/?format=raw")
     if r.status_code != 200: # Fallback
-        r = requests.get("https://api.ipify.org/?format=raw")
+        r = requests.get("http://ip.42.pl/raw")
     return r.text
 
 def update_dns(ip):
