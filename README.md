@@ -1,5 +1,10 @@
 # godaddy-dyndns
 
+![python-version](https://img.shields.io/badge/python-3.7-blue)
+![GitHub](https://img.shields.io/github/license/leonlatsch/godaddy-dyndns)
+![Maintenance](https://img.shields.io/maintenance/yes/2019)
+
+
 Python based GoDaddy dyndns script using only the GoDaddy api.
 
 ## Functionallity
