@@ -11,7 +11,7 @@ Python based GoDaddy dyndns script using only the GoDaddy api.
 
 - Gets the public ip using [api.ipify.org](https://api.ipify.org/?format=raw). Fallback: [ip.42.pl](http://ip.42.pl/raw)
 - Caches the last obtained ip and checks for a change.
-- Creates or updates the dns entry with the name of `@` and the type of `A` pointing to your ip in case of a new ip.
+- If it has changed, it creates or updates the `A` record entry for the configured host with the new ip.
 - **Won't work if there are more than one entries matching this condition!** (very unlikely)
 
 ## Usage
