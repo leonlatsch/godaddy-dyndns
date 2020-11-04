@@ -2,7 +2,7 @@
 
 # MIT License
 # 
-# Copyright (c) 2019 Leon Latsch
+# Copyright (c) 2019-2020 Leon Latsch
 
 from configparser import ConfigParser
 import requests
@@ -16,10 +16,11 @@ cfg.read(os.path.dirname(__file__) + "/godaddy-dyndns.conf")
 key = cfg.get("godaddy", "key")
 secret = cfg.get("godaddy", "secret")
 domain = cfg.get("godaddy", "domain")
+host = cfg.get("godaddy", "host")
 
 base_url = "https://api.godaddy.com"
 endpoint_update = "/v1/domains/" + domain + "/records"
-endpoint_records = "/v1/domains/" + domain + "/records/A/@"
+endpoint_records = "/v1/domains/" + domain + "/records/A/" + host
 
 def safe_new_ip(ip):
     f = open(LAST_IP, "w")
@@ -49,14 +50,14 @@ def update_dns(ip):
         return r
     
     records = r.json()
-    new_records = [{"data": ip, "name": "@", "type": "A"}]
+    new_records = [{"data": ip, "name": host, "type": "A"}]
 
     if len(records) == 0:
         return requests.patch(base_url + endpoint_update, json=new_records, headers=headers)
     elif len(records) == 1:
         return  requests.put(base_url + endpoint_records, json=new_records, headers=headers)
     elif len(records) > 1:
-        print("[!] You got " + str(len(records)) + " records of type A with host @. Please delete as least " + str(len(records) - 1) + " of them")
+        print("[!] You got " + str(len(records)) + " records of type A with host " + host + ". Please delete as least " + str(len(records) - 1) + " of them")
 
 
 def main():
@@ -67,7 +68,7 @@ def main():
         safe_new_ip(ip)
         r = update_dns(ip)
         if r is not None and r.status_code == 200:
-            print("[*] Updated dns record for " + domain + " to " + ip)
+            print("[*] Updated dns record for host " + host + " on domain " + domain + " to " + ip)
         elif r is not None:
             print("[!] Error updating dns record: " + str(r.status_code) + " " + str(r.reason))
     else:
