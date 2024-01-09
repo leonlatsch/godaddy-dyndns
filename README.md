@@ -22,3 +22,12 @@ Python based GoDaddy dyndns script using only the GoDaddy api.
 - I recommend setting up a cron job to run the script every hour: `0 * * * * /path/to/script.py`. **[Help](https://crontab.guru)**
 
 If you have questions feel free to create an issue.
+
+## Docker / in dev
+Run godaddy-dyndns as docker container like this:
+```
+docker volume create godaddy-dyndns-data
+docker run -d -v godaddy-dyndns-data:/config leonlatsch/godaddy-dyndns
+```
+
+`godaddy-dyndns.conf` is located in the new volume.

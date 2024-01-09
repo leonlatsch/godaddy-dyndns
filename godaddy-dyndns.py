@@ -1,16 +1,21 @@
-#!/usr/bin/python3
+#!/usr/local/bin/python3
 
 # MIT License
 #
-# Copyright (c) 2019-2021 Leon Latsch
+# Copyright (c) 2019-2023 Leon Latsch
 
 from configparser import ConfigParser
 import requests
 import os
+import time
 
 # Global Config
+config_file = os.path.dirname(__file__) + "/godaddy-dyndns.conf"
+if not os.path.isfile(config_file):
+    config_file = os.path.dirname(__file__) + "/config/godaddy-dyndns.conf"
+
 cfg = ConfigParser()
-cfg.read(os.path.dirname(__file__) + "/godaddy-dyndns.conf")
+cfg.read(config_file)
 
 if not cfg.has_option("godaddy", "key") or not cfg.has_option("godaddy", "secret") or not cfg.has_option("godaddy", "domain") or not cfg.has_option("godaddy", "hosts"):
     print("[!] Config incomplete")
@@ -20,6 +25,8 @@ key = cfg.get("godaddy", "key")
 secret = cfg.get("godaddy", "secret")
 domain = cfg.get("godaddy", "domain")
 hosts = cfg.get("godaddy", "hosts").split(",")
+
+watchmode = cfg.get("script", "watchmode").lower() in "true"
 
 base_url = "https://api.godaddy.com"
 endpoint_records = f"/v1/domains/{domain}/records/"
@@ -86,28 +93,38 @@ def main():
     print()
     print("### GoDaddy DynDNS ###")
     print()
+    print(f"[*] Using config file: {config_file}")
 
-    last_ip = get_last_ip()
-    print(f"[*] Cached IP is: {last_ip}")
-    ip = get_ip()
-    print(f"[*] Public IP is: {ip}")
-    print()
+    if watchmode:
+        print("[*] Watchmode enabled. Update will run every hour")
 
-    if ip != last_ip:
-        safe_new_ip(ip)
-        print(f"[*] Updating hosts {hosts} on {domain} to {ip}")
+    while True:
+        last_ip = get_last_ip()
+        print(f"[*] Cached IP is: {last_ip}")
+        ip = get_ip()
+        print(f"[*] Public IP is: {ip}")
         print()
 
-        for host in hosts:
-            print(f"[*] Processing {host}.{domain} ...", end=" ")
+        if ip != last_ip:
+            safe_new_ip(ip)
+            print(f"[*] Updating hosts {hosts} on {domain} to {ip}")
+            print()
 
-            r = update_dns(ip, host)
-            if r is not None and r.status_code == 200:
-                print("Done")
-            elif r is not None:
-                print("Error: " + r.text)
-    else:
-        print("[*] IP hasn't changed. No update.")
+            for host in hosts:
+                print(f"[*] Processing {host}.{domain} ...", end=" ")
+
+                r = update_dns(ip, host)
+                if r is not None and r.status_code == 200:
+                    print("Done")
+                elif r is not None:
+                    print("Error: " + r.text)
+        else:
+            print("[*] IP hasn't changed. No update.")
+        
+        if not watchmode:
+            return
+        
+        time.sleep(10)
 
 if __name__ == "__main__":
     main()
