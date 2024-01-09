@@ -15,11 +15,11 @@ cfg.read(os.path.dirname(__file__) + "/godaddy-dyndns.conf")
 key = cfg.get("godaddy", "key")
 secret = cfg.get("godaddy", "secret")
 domain = cfg.get("godaddy", "domain")
-host = cfg.get("godaddy", "host")
+hosts = cfg.get("godaddy", "hosts").split(",")
 
 base_url = "https://api.godaddy.com"
-endpoint_update = "/v1/domains/" + domain + "/records"
-endpoint_records = "/v1/domains/" + domain + "/records/A/" + host
+endpoint_records = f"/v1/domains/{domain}/records/"
+endpoint_a_records = f"/v1/domains/{domain}/records/A/"
 
 # Colors
 GREEN = '\033[92m'
@@ -33,6 +33,7 @@ def safe_new_ip(ip):
     f = open(LAST_IP, "w")
     f.write(ip)
     f.close()
+    print(f"[*] Cached new ip {ip}")
 
 def get_last_ip():
     try:
@@ -49,9 +50,9 @@ def get_ip():
         r = requests.get("http://ip.42.pl/raw")
     return r.text
 
-def update_dns(ip):
+def update_dns(ip, host):
     headers = {"Authorization": "sso-key " + key + ":" + secret}
-    r = requests.get(base_url + endpoint_records, headers=headers)
+    r = requests.get(base_url + endpoint_a_records + host, headers=headers)
 
     if r.status_code != 200:
         return r
@@ -59,13 +60,23 @@ def update_dns(ip):
     records = r.json()
     new_records = [{"data": ip, "name": host, "type": "A"}]
 
+    # Create new DNS Record
     if len(records) == 0:
-        return requests.patch(base_url + endpoint_update, json=new_records, headers=headers)
+        print("creating... ", end="")
+        return requests.patch(base_url + endpoint_records, json=new_records, headers=headers)
+    
+    # Replace existing record
     elif len(records) == 1:
-        return  requests.put(base_url + endpoint_records, json=new_records, headers=headers)
+        print("updating... ", end="")
+        return requests.put(base_url + endpoint_a_records + host, json=new_records, headers=headers)
+    
+    # Error: More than 1 record on host
     elif len(records) > 1:
         print("[!] You got " + str(len(records)) + " records of type A with host " + host + ". Please delete as least " + str(len(records) - 1) + " of them")
 
+    # Error
+    else:
+        print(f"[!] Error. Chech DNS records on {host}")
 
 def main():
     print()
@@ -79,16 +90,20 @@ def main():
     print()
 
     if ip != last_ip:
-        print(f"[*] Updating DNS Record for for host {host} on domain {domain} to {ip}...", end=" ")
         safe_new_ip(ip)
-        r = update_dns(ip)
-        if r is not None and r.status_code == 200:
-            print("Done")
-        elif r is not None:
-            print("Error")
-            print(f"[!] Error updating dns record: {str(r.status_code)} {str(r.reason)}")
+        print(f"[*] Updating hosts {hosts} on {domain} to {ip}")
+        print()
+
+        for host in hosts:
+            print(f"[*] Processing {host}.{domain} ...", end=" ")
+
+            r = update_dns(ip, host)
+            if r is not None and r.status_code == 200:
+                print("Done")
+            elif r is not None:
+                print("Error: " + r.text)
     else:
-        print("[*] Ip hasn't changed, no update")
+        print("[*] IP hasn't changed. No update.")
 
 if __name__ == "__main__":
     main()
