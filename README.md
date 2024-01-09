@@ -21,6 +21,8 @@ Python based GoDaddy dyndns script using only the GoDaddy api.
 - run the script to test it (You may have to add execution permissions).
 - I recommend setting up a cron job to run the script every hour: `0 * * * * /path/to/script.py`. **[Help](https://crontab.guru)**
 
+- If you enabled `watchmode` in the config file, the script will keep running and udpate the dns every hour.
+
 If you have questions feel free to create an issue.
 
 ## Docker / in dev

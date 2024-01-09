@@ -26,7 +26,8 @@ secret = cfg.get("godaddy", "secret")
 domain = cfg.get("godaddy", "domain")
 hosts = cfg.get("godaddy", "hosts").split(",")
 
-watchmode = cfg.get("script", "watchmode").lower() in "true"
+watchmode = cfg.get("watchmode", "enabled").lower() in "true"
+watchmode_interval = int(cfg.get("watchmode", "interval"))
 
 base_url = "https://api.godaddy.com"
 endpoint_records = f"/v1/domains/{domain}/records/"
@@ -96,7 +97,7 @@ def main():
     print(f"[*] Using config file: {config_file}")
 
     if watchmode:
-        print("[*] Watchmode enabled. Update will run every hour")
+        print(f"[*] Watchmode enabled. Update will run every {watchmode_interval} seconds")
 
     while True:
         last_ip = get_last_ip()
@@ -124,7 +125,7 @@ def main():
         if not watchmode:
             return
         
-        time.sleep(10)
+        time.sleep(watchmode_interval)
 
 if __name__ == "__main__":
     main()
