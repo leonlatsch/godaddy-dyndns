@@ -12,6 +12,10 @@ import os
 cfg = ConfigParser()
 cfg.read(os.path.dirname(__file__) + "/godaddy-dyndns.conf")
 
+if not cfg.has_option("godaddy", "key") or not cfg.has_option("godaddy", "secret") or not cfg.has_option("godaddy", "domain") or not cfg.has_option("godaddy", "hosts"):
+    print("[!] Config incomplete")
+    exit()
+
 key = cfg.get("godaddy", "key")
 secret = cfg.get("godaddy", "secret")
 domain = cfg.get("godaddy", "domain")
