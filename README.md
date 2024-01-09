@@ -26,8 +26,23 @@ If you have questions feel free to create an issue.
 ## Docker / in dev
 Run godaddy-dyndns as docker container like this:
 ```
-docker volume create godaddy-dyndns-data
-docker run -d -v godaddy-dyndns-data:/config leonlatsch/godaddy-dyndns
+docker volume create godaddy-dyndns-config
+docker run -d -v godaddy-dyndns-config:/config --name godaddy-dyndns leonlatsch/godaddy-dyndns
+```
+Or docker compoe:
+```
+version: '3'
+
+services:
+    dyndns:
+        container_name: godaddy-dyndns
+        image: leonlatsch/godaddy-dyndns:latest
+        volumes:
+            - config:/config
+        restart: always
+
+volumes:
+    config:
 ```
 
 `godaddy-dyndns.conf` is located in the new volume.
