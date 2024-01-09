@@ -38,7 +38,7 @@ version: '3'
 services:
     dyndns:
         container_name: godaddy-dyndns
-        image: ghcr.io/leonlatsch/godaddy-dyndns:master
+        image: ghcr.io/leonlatsch/godaddy-dyndns:latest
         volumes:
             - config:/config
         restart: always
