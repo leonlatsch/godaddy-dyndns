@@ -1,9 +1,5 @@
 name: Publish Docker image
 
-permissions:
-    contents: read
-    packages: write
-
 on:
   workflow_dispatch:
   release:
