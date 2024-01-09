@@ -24,7 +24,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: leonlatsch/godaddy-dyndns
+          images: ghcr.io/leonlatsch/godaddy-dyndns
       
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
