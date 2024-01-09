@@ -29,7 +29,7 @@ If you have questions feel free to create an issue.
 Run godaddy-dyndns as docker container like this:
 ```
 docker volume create godaddy-dyndns-config
-docker run -d -v godaddy-dyndns-config:/config --name godaddy-dyndns leonlatsch/godaddy-dyndns
+docker run -d -v godaddy-dyndns-config:/config --name godaddy-dyndns ghcr.io/leonlatsch/godaddy-dyndns
 ```
 Or docker compoe:
 ```
@@ -38,7 +38,7 @@ version: '3'
 services:
     dyndns:
         container_name: godaddy-dyndns
-        image: leonlatsch/godaddy-dyndns:latest
+        image: ghcr.io/leonlatsch/godaddy-dyndns:master
         volumes:
             - config:/config
         restart: always
