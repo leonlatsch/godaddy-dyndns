@@ -4,7 +4,9 @@
 ![GitHub](https://img.shields.io/github/license/leonlatsch/godaddy-dyndns)
 ![Maintenance](https://img.shields.io/maintenance/yes/2019)
 
-REPLACED BY [go-resolve](https://github.com/leonlatsch/go-resolve). This is not maintained anymore
+----
+# REPLACED BY [go-resolve](https://github.com/leonlatsch/go-resolve). NOT MAINTAINED ANYMORE
+----
 
 Python based GoDaddy dyndns script using only the GoDaddy api.
 
